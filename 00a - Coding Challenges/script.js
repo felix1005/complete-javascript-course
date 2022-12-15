@@ -1,18 +1,15 @@
-const massJohn = 85;
-const heightJohn = 1.76;
-const bmiJohn = massJohn / heightJohn ** 2;
-console.log("John:", massJohn, heightJohn, bmiJohn);
+const averageDolphins = (97 + 112 + 90) / 3;
+const averageKoalas = (109 + 95 + 90) / 3;
+const minScore = 100;
 
-const massMark = 95;
-const heightMark = 1.88;
-const bmiMark = massMark / heightMark ** 2;
-console.log("Mark:", massMark, heightMark, bmiMark);
+console.log(averageDolphins, averageKoalas);
 
-const markHigherBMI = bmiMark > bmiJohn;
-
-
-if (markHigherBMI) {
-    console.log(`Mark's BMI (${bmiMark}) is higher than John's (${bmiJohn})!`);
+if (averageDolphins > averageKoalas && averageDolphins >= minScore) {
+    console.log("The winner is Dolphins!");
+} else if (averageKoalas > averageDolphins && averageKoalas >= minScore) {
+    console.log("The winner is Koalas!");
+} else if (averageKoalas === averageDolphins && averageKoalas >= minScore) {
+    console.log("It is a DRAW!");
 } else {
-    console.log(`John's (${bmiJohn}) is higher than Mark's BMI (${bmiMark})!`);
+    console.log("No one wins the trophy!");
 }
