@@ -1,15 +1,22 @@
-const averageDolphins = (97 + 112 + 90) / 3;
-const averageKoalas = (109 + 95 + 90) / 3;
-const minScore = 100;
+"use strict";
+
+const calcAverage = (score1, score2, score3) => (score1 + score2 + score3) / 3;
+
+// Test Data 1
+// const averageDolphins = calcAverage(44, 23, 71);
+// const averageKoalas = calcAverage(65, 54, 49);
+
+// Test Data 2
+const averageDolphins = calcAverage(85, 54, 41);
+const averageKoalas = calcAverage(23, 34, 27);
 
 console.log(averageDolphins, averageKoalas);
 
-if (averageDolphins > averageKoalas && averageDolphins >= minScore) {
-    console.log("The winner is Dolphins!");
-} else if (averageKoalas > averageDolphins && averageKoalas >= minScore) {
-    console.log("The winner is Koalas!");
-} else if (averageKoalas === averageDolphins && averageKoalas >= minScore) {
-    console.log("It is a DRAW!");
-} else {
-    console.log("No one wins the trophy!");
+function checkWinner(avg1, avg2) {
+    if (avg1 >= avg2 * 2) console.log(`Dolphins wins (${avg1} vs. ${avg2})`);
+    else if (avg2 >= avg1 * 2) console.log(`Koalas wins (${avg2} vs. ${avg1})`);
+    else console.log("No winner!");
 }
+
+checkWinner(averageDolphins, averageKoalas);
+checkWinner(100, 200);
