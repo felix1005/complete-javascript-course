@@ -1,28 +1,64 @@
 "use strict";
 
-function calcTip(bill) {
-    return bill >= 50 && bill <= 300 ? bill * 0.15 : bill * 0.2;
-}
+const game = {
+  team1: "Bayern Munich",
+  team2: "Borrussia Dortmund",
+  players: [
+    [
+      "Neuer",
+      "Pavard",
+      "Martinez",
+      "Alaba",
+      "Davies",
+      "Kimmich",
+      "Goretzka",
+      "Coman",
+      "Muller",
+      "Gnarby",
+      "Lewandowski",
+    ],
+    [
+      "Burki",
+      "Schulz",
+      "Hummels",
+      "Akanji",
+      "Hakimi",
+      "Weigl",
+      "Witsel",
+      "Hazard",
+      "Brandt",
+      "Sancho",
+      "Gotze",
+    ],
+  ],
+  score: "4:0",
+  scored: ["Lewandowski", "Gnarby", "Lewandowski", "Hummels"],
+  date: "Nov 9th, 2037",
+  odds: {
+    team1: 1.33,
+    x: 3.25,
+    team2: 6.5,
+  },
+};
 
-function calcAverage(arr) {
-    let sum = 0;
-    for (let i = 0; i < arr.length; i++) {
-        sum += arr[i];
-    }
-    return sum / arr.length;
-}
+const [players1, players2] = game.players;
+const [gk, ...fieldPlayers] = players1;
+const allPlayers = [...players1, ...players2];
+const players1Final = [...players1, "Thiago", "Coutinho", "Perisic"];
+const {
+  odds: { team1, x: draw, team2 },
+} = game;
 
-const bills = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52];
-const tips = [];
-const totals = [];
+console.log(team1, draw, team2);
 
-for (let i = 0; i < bills.length; i++) {
-    tips.push(calcTip(bills[i]));
-    totals.push(bills[i] + tips[i]);
-}
+const printGoals = function (...players) {
+  console.log(players.length, ...players);
+};
 
-const averageAmount = calcAverage(totals);
+printGoals("Davies", "Muller", "Lewandowski", "Kimmich");
+printGoals(...game.scored);
 
-console.log(tips);
-console.log(totals);
-console.log(averageAmount);
+console.log(team1, draw, team2);
+
+team1 < team2 && console.log("Team 1 is likely to win");
+team1 > team2 && console.log("Team 2 is likely to win");
