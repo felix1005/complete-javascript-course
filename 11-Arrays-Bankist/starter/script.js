@@ -100,3 +100,24 @@ const checkDogs = function (arr1, arr2) {
 checkDogs(dogsJuliaD1, dogsKateD1);
 console.log('----------');
 checkDogs(dogsJuliaD2, dogsKateD2);
+
+// TEST DATA 1
+const dogAges1 = [5, 2, 4, 1, 15, 8, 3];
+
+// TEST DATA 2
+const dogAges2 = [16, 6, 10, 5, 6, 1, 4];
+
+const calcAverageHumanAge = function (dogAges) {
+  const humanAges = dogAges.map(dogAge =>
+    dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4
+  );
+  const humanAgesAdultDog = humanAges.filter(humanAge => humanAge >= 18);
+  const averageHumanAge =
+    humanAgesAdultDog.reduce((avgAge, age) => avgAge + age, 0) /
+    humanAgesAdultDog.length;
+  console.log(averageHumanAge);
+  return averageHumanAge;
+};
+
+calcAverageHumanAge(dogAges1);
+calcAverageHumanAge(dogAges2);
