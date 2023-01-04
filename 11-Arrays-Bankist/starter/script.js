@@ -118,3 +118,75 @@ const calcAverageHumanAge = dogAges => {
 
 calcAverageHumanAge(dogAges1);
 calcAverageHumanAge(dogAges2);
+
+// Coding Challenge 4
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+// 1.
+dogs.forEach(
+  dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
+);
+
+console.log(dogs);
+
+// 2.
+dogs.forEach(dog => {
+  if (dog.owners.includes('Sarah')) {
+    const result =
+      dog.curFood <= dog.recommendedFood * 1.1 &&
+      dog.curFood >= dog.recommendedFood * 0.9
+        ? 'just nice'
+        : dog.curFood < dog.recommendedFood * 0.9
+        ? 'too less'
+        : 'too much';
+    console.log(
+      dog.curFood,
+      dog.recommendedFood,
+      `Sarah\'s dog is eating ${result}.`
+    );
+  }
+});
+
+// 3.
+const ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recommendedFood * 1.1)
+  .flatMap(dog => dog.owners);
+
+const ownersEatTooLittle = dogs
+  .filter(dog => dog.curFood < dog.recommendedFood * 0.9)
+  .flatMap(dog => dog.owners);
+
+// 4.
+console.log(ownersEatTooMuch.join(' and ') + "'s dog eat too much!");
+console.log(ownersEatTooLittle.join(' and ') + "'s dog eat too little!");
+
+// 5.
+console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+
+// 6.
+console.log(
+  dogs.some(
+    dog =>
+      dog.curFood <= dog.recommendedFood * 1.1 &&
+      dog.curFood >= dog.recommendedFood * 0.9
+  )
+);
+
+// 7.
+const dogsEatingOkay = dogs.filter(
+  dog =>
+    dog.curFood <= dog.recommendedFood * 1.1 &&
+    dog.curFood >= dog.recommendedFood * 0.9
+);
+
+console.log(dogsEatingOkay);
+
+// 8.
+console.log(dogs.slice().sort((a, b) => a.recommendedFood - b.recommendedFood));
+console.log(dogs);
