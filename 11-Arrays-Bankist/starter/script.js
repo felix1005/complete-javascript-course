@@ -164,20 +164,23 @@ btnLogin.addEventListener('click', e => {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  inputTransferTo.value = 'jd';
-  const transferAmount = (inputTransferAmount.value = 1000);
-  // Number(transferAmount)
-  console.log(inputTransferTo.value, transferAmount);
+  const transferAmount = Number(inputTransferAmount.value);
+  const receiver = inputTransferTo.value;
 
   // verification of receiver account
-  const receiverAcc = accounts.find(
-    acc => inputTransferTo.value === acc.username
-  );
+  const receiverAcc = accounts.find(acc => receiver === acc.username);
 
   inputTransferTo.value = inputTransferAmount.value = '';
 
-  // TODO: restrict to transfer to own acc.
-  if (receiverAcc && currentAcc.balance >= transferAmount) {
+  if (
+    receiverAcc &&
+    receiverAcc !== currentAcc &&
+    currentAcc.balance >= transferAmount
+  ) {
+    alert(
+      `Successfully transferred ${transferAmount}€ to ${receiverAcc.owner}`
+    );
+
     // Add -ve movement
     currentAcc.movements.push(-transferAmount);
 
@@ -186,12 +189,12 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAcc);
-
-    console.log(
-      currentAcc.username,
-      currentAcc.movements,
-      receiverAcc.username,
-      receiverAcc.movements
-    );
   }
 });
+
+console.log(
+  currentAcc.username,
+  currentAcc.movements,
+  receiverAcc.username,
+  receiverAcc.movements
+);
