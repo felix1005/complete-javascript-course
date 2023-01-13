@@ -82,6 +82,60 @@ accounts.forEach(acc => {
     .join('');
 });
 
+// Functions
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((bal, mov) => bal + mov, 0);
+  labelBalance.textContent = `${acc.balance}€`;
+};
+
+const displayMovements = function (acc) {
+  acc.movements.forEach((mov, i) => {
+    const movType = mov > 0 ? 'deposit' : 'withdrawal';
+    containerMovements.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="movements__row">
+        <div class="movements__type movements__type--${movType}">${
+        i + 1
+      } ${movType}</div>
+        <div class="movements__value">${mov}€</div>
+      </div>`
+    );
+  });
+};
+
+const calcDisplaySummary = function (acc) {
+  // Total Deposit
+  const totalDeposit = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((bal, mov) => bal + mov, 0);
+  labelSumIn.textContent = `${totalDeposit}€`;
+
+  // Total Withdrawal
+  const totalWithdrawal = Math.abs(
+    acc.movements.filter(mov => mov < 0).reduce((bal, mov) => bal + mov, 0)
+  );
+  labelSumOut.textContent = `${totalWithdrawal}€`;
+
+  // Total Interest
+  const interest = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter(interest => interest > 1)
+    .reduce((total, int) => total + int);
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+const updateUI = function (acc) {
+  // Display Movements
+  displayMovements(acc);
+
+  // Balance
+  calcDisplayBalance(acc);
+
+  // Display Summary
+  calcDisplaySummary(acc);
+};
+
 // Login
 let currentAcc;
 btnLogin.addEventListener('click', e => {
@@ -99,47 +153,45 @@ btnLogin.addEventListener('click', e => {
 
     containerMovements.innerHTML = '';
 
-    // Movements
-    currentAcc.movements.forEach((mov, i) => {
-      const movType = mov > 0 ? 'deposit' : 'withdrawal';
-      containerMovements.insertAdjacentHTML(
-        'afterbegin',
-        `<div class="movements__row">
-          <div class="movements__type movements__type--${movType}">${
-          i + 1
-        } ${movType}</div>
-          <div class="movements__value">${mov}€</div>
-        </div>`
-      );
-    });
-
-    // Balance
-    const balance = currentAcc.movements.reduce((bal, mov) => bal + mov, 0);
-    labelBalance.textContent = `${balance}€`;
-
-    // Total Deposits
-    const totalDeposit = currentAcc.movements
-      .filter(mov => mov > 0)
-      .reduce((bal, mov) => bal + mov, 0);
-    labelSumIn.textContent = `${totalDeposit}€`;
-
-    // Total Withdrawals
-    const totalWithdrawal = Math.abs(
-      currentAcc.movements
-        .filter(mov => mov < 0)
-        .reduce((bal, mov) => bal + mov, 0)
-    );
-    labelSumOut.textContent = `${totalWithdrawal}€`;
-
-    // Interest
-    const interest = currentAcc.movements
-      .filter(mov => mov > 0)
-      .map(deposit => (deposit * currentAcc.interestRate) / 100)
-      .filter(interest => interest > 1)
-      .reduce((total, int) => total + int);
-    labelSumInterest.textContent = `${interest}€`;
+    updateUI(currentAcc);
+  } else {
+    containerApp.style.opacity = 0;
   }
 
   inputLoginUsername.value = inputLoginPin.value = '';
 });
 // btnLogin.blur();
+
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  inputTransferTo.value = 'jd';
+  const transferAmount = (inputTransferAmount.value = 1000);
+  // Number(transferAmount)
+  console.log(inputTransferTo.value, transferAmount);
+
+  // verification of receiver account
+  const receiverAcc = accounts.find(
+    acc => inputTransferTo.value === acc.username
+  );
+
+  inputTransferTo.value = inputTransferAmount.value = '';
+
+  // TODO: restrict to transfer to own acc.
+  if (receiverAcc && currentAcc.balance >= transferAmount) {
+    // Add -ve movement
+    currentAcc.movements.push(-transferAmount);
+
+    // add transfer amount to receiver acc.
+    receiverAcc.movements.push(transferAmount);
+
+    // Update UI
+    updateUI(currentAcc);
+
+    console.log(
+      currentAcc.username,
+      currentAcc.movements,
+      receiverAcc.username,
+      receiverAcc.movements
+    );
+  }
+});
