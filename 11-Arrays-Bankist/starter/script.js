@@ -88,8 +88,14 @@ const calcDisplayBalance = function (acc) {
   labelBalance.textContent = `${acc.balance}€`;
 };
 
-const displayMovements = function (acc) {
-  acc.movements.forEach((mov, i) => {
+const displayMovements = function (acc, sort = false) {
+  containerMovements.innerHTML = ''; // clear current content
+
+  const movs = sort
+    ? currentAcc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
+
+  movs.forEach((mov, i) => {
     const movType = mov > 0 ? 'deposit' : 'withdrawal';
     containerMovements.insertAdjacentHTML(
       'afterbegin',
@@ -151,8 +157,6 @@ btnLogin.addEventListener('click', e => {
 
     labelWelcome.textContent = `Hi, ${currentAcc.owner}`;
 
-    containerMovements.innerHTML = '';
-
     updateUI(currentAcc);
   } else {
     containerApp.style.opacity = 0;
@@ -209,6 +213,7 @@ btnLoan.addEventListener('click', function (e) {
   inputLoanAmount.value = '';
 });
 
+// Delete Account
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   if (
@@ -222,4 +227,16 @@ btnClose.addEventListener('click', function (e) {
     containerApp.style.opacity = 0;
   }
   inputCloseUsername.value = inputClosePin.value = '';
+});
+
+// Sort Function
+let isSorted = false;
+
+// asc < 0, dsc > 0
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAcc, !sorted);
+  sorted = !sorted;
 });
