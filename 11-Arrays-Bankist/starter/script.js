@@ -177,24 +177,49 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc !== currentAcc &&
     currentAcc.balance >= transferAmount
   ) {
-    alert(
-      `Successfully transferred ${transferAmount}€ to ${receiverAcc.owner}`
-    );
-
     // Add -ve movement
     currentAcc.movements.push(-transferAmount);
 
     // add transfer amount to receiver acc.
     receiverAcc.movements.push(transferAmount);
 
+    alert(
+      `Successfully transferred ${transferAmount}€ to ${receiverAcc.owner}`
+    );
+
     // Update UI
     updateUI(currentAcc);
   }
 });
 
-console.log(
-  currentAcc.username,
-  currentAcc.movements,
-  receiverAcc.username,
-  receiverAcc.movements
-);
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const loanAmount = Number(inputLoanAmount.value);
+
+  if (
+    loanAmount > 0 &&
+    currentAcc.movements.some(mov => mov >= loanAmount * 0.1)
+  ) {
+    currentAcc.movements.push(loanAmount);
+
+    alert(`Loan of ${loanAmount}€ successfully credited account`);
+
+    updateUI(currentAcc);
+  }
+  inputLoanAmount.value = '';
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value === currentAcc.username &&
+    Number(inputClosePin.value) === currentAcc.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAcc.username
+    );
+    accounts.splice(index, 1);
+    containerApp.style.opacity = 0;
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+});
