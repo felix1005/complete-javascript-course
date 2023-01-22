@@ -93,7 +93,9 @@ const displayMovements = function (movements, sort = false) {
     const displayMovDate = function () {
       let movDate = new Date(currentAccount.movementsDates[i]);
 
-      const daysAgo = Math.floor((now - movDate) / (1000 * 60 * 60 * 24));
+      const daysAgo = Math.floor(
+        (loginDateTime - movDate) / (1000 * 60 * 60 * 24)
+      );
 
       if (daysAgo < 1) return 'Today';
       if (daysAgo >= 1 && daysAgo <= 7) return `${daysAgo} ago`;
@@ -216,13 +218,30 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+const startTimer = function () {
+  let time = 30;
+  const countdown = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${sec}`;
+    time--;
+
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+  };
+
+  countdown();
+  clearInterval(timer);
+  timer = setInterval(countdown, 1000);
+};
+
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
-const now = new Date();
-currentAccount = account1;
-containerApp.style.opacity = 100;
-updateUI(currentAccount);
+let currentAccount, timer;
+const loginDateTime = new Date();
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -239,7 +258,7 @@ btnLogin.addEventListener('click', function (e) {
     }`;
 
     // Display Date
-    labelDate.textContent = displayDate(now);
+    labelDate.textContent = displayDate(loginDateTime);
 
     containerApp.style.opacity = 100;
 
@@ -249,6 +268,9 @@ btnLogin.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Timer
+    startTimer();
   }
 });
 
@@ -275,6 +297,9 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Reset Timer
+    startTimer();
   }
 });
 
@@ -290,6 +315,9 @@ btnLoan.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Reset Timer
+    startTimer();
   }
   inputLoanAmount.value = '';
 });
